@@ -1,0 +1,230 @@
+# Machine inventory - single source of truth.
+# Edit this file, then run `make sync` to regenerate ~/.ssh/config.d/machines.
+#
+# status:  active   -> emitted to ssh config
+#          offline  -> emitted (machine is real, just down / off-network)
+#          dead     -> recorded only, NOT emitted (kept so we remember it existed)
+#
+# Paths in `key:` are relative to this directory unless they start with ~ or /.
+
+defaults:
+  user: root
+  options:
+    ControlMaster: auto
+    ControlPath: ~/.ssh/cm-%r@%h:%p
+    ControlPersist: 30m
+    ServerAliveInterval: "30"
+    ServerAliveCountMax: "3"
+
+machines:
+
+  # ---- Oracle Cloud ----
+  oci:
+    host: "***REMOVED***"
+    user: ubuntu
+    key: keys/oci.key
+    provider: oracle
+    purpose: "TODO"
+    status: active
+
+  # ---- DigitalOcean ----
+  app-host-1:
+    host: "***REMOVED***"
+    key: ~/.ssh/id_ed25519_droplet
+    provider: digitalocean
+    purpose: "***REMOVED*** dashboard; postgres on :5432"
+    status: active
+
+  app-host-2:
+    host: "***REMOVED***"
+    provider: digitalocean
+    purpose: "***REMOVED***"
+    status: active
+
+  app-host-3:
+    host: "***REMOVED***"
+    provider: digitalocean
+    purpose: "docker: ***REMOVED***, ***REMOVED***, ***REMOVED***"
+    status: active
+
+  staticsite1:
+    host: "***REMOVED***"
+    provider: digitalocean
+    purpose: "serves a static site"
+    status: active
+
+  do-host-1:
+    host: "***REMOVED***"
+    provider: digitalocean
+    purpose: "TODO - identify"
+    status: active
+
+  do-host-2:
+    host: "***REMOVED***"
+    provider: digitalocean
+    purpose: "TODO - identify"
+    status: active
+
+  do-host-3:
+    host: "***REMOVED***"
+    key: ~/.ssh/id_ed25519
+    provider: digitalocean
+    purpose: "TODO - identify (key installed via ssh-copy-id)"
+    status: active
+
+  # ---- Hostinger / other VPS ----
+  vps-host-4:
+    host: "***REMOVED***"
+    key: ~/.ssh/id_ed25519
+    provider: hostinger
+    purpose: "TODO - identify (key installed via ssh-copy-id)"
+    status: active
+
+  vps-host-5:
+    host: "***REMOVED***"
+    provider: unknown
+    purpose: "TODO - identify"
+    status: active
+
+  # ---- Cloudflare tunnel ----
+  tunnel:
+    host: "***REMOVED***"
+    user: "***REMOVED***"
+    proxy_command: "cloudflared access ssh --hostname %h"
+    provider: cloudflare-tunnel
+    purpose: "reached via cloudflared access, not direct TCP"
+    status: active
+
+  # ---- Tailscale: own tailnet (***REMOVED***) ----
+  pve:
+    host: "***REMOVED***"
+    key: ~/.ssh/id_ed25519_droplet
+    provider: tailscale
+    purpose: "proxmox node; web UI on :8006"
+    status: offline
+    note: "tailscale reports offline, last seen 59d"
+
+  pve-2:
+    host: "***REMOVED***"
+    key: ~/.ssh/id_ed25519_droplet
+    provider: tailscale
+    purpose: "proxmox node; web UI on :8006"
+    status: active
+
+  app-host-4:
+    host: "***REMOVED***"
+    provider: tailscale
+    purpose: "TODO - identify"
+    status: active
+
+  state-01:
+    host: "***REMOVED***"
+    provider: tailscale
+    purpose: "TODO - identify"
+    status: offline
+    note: "tailscale reports offline, last seen 59d"
+
+  desktop-fc6hrto:
+    host: "***REMOVED***"
+    user: "***REMOVED***"
+    provider: tailscale
+    purpose: "desktop workstation"
+    status: offline
+    note: "tailscale reports offline, last seen 12h"
+
+  macbook-air:
+    host: "***REMOVED***"
+    user: "***REMOVED***"
+    provider: tailscale
+    purpose: "MacBook Air"
+    status: offline
+    note: "online in tailscale but TCP/22 refused - Remote Login likely off. Verify user."
+
+  # ---- Tailscale: shared tailnet (***REMOVED***) ----
+  app-01t:
+    host: "***REMOVED***"
+    provider: tailscale-shared
+    purpose: "TODO - identify"
+    status: active
+    note: "shared tailnet - use the FQDN, short name does not resolve"
+
+  control-01t:
+    host: "***REMOVED***"
+    provider: tailscale-shared
+    purpose: "TODO - identify"
+    status: active
+    note: "shared tailnet - use the FQDN, short name does not resolve"
+
+  state-01t:
+    host: "***REMOVED***"
+    provider: tailscale-shared
+    purpose: "TODO - identify"
+    status: active
+    note: "shared tailnet - use the FQDN, short name does not resolve"
+
+  # ---- LAN (home network - not reachable from current WSL network) ----
+  lan-50:
+    host: "***REMOVED***"
+    user: "***REMOVED***"
+    provider: lan
+    purpose: "main LAN box; n8n :5678, postgres :5432, :18789"
+    status: offline
+    note: "only reachable from home network"
+
+  lan-58:
+    host: "***REMOVED***"
+    user: "***REMOVED***"
+    port: 22222
+    provider: lan
+    purpose: "TODO - identify (also seen on port 2222)"
+    status: offline
+    note: "only reachable from home network"
+
+  lan-40:
+    host: "***REMOVED***"
+    user: "***REMOVED***"
+    provider: lan
+    purpose: "TODO - identify"
+    status: offline
+    note: "only reachable from home network"
+
+  lan-47:
+    host: "***REMOVED***"
+    user: "***REMOVED***"
+    provider: lan
+    purpose: "TODO - identify"
+    status: offline
+    note: "only reachable from home network"
+
+  # ---- Decommissioned: recorded, not emitted to ssh config ----
+  old-host-6:
+    host: "***REMOVED***"
+    provider: unknown
+    purpose: "used with ssh -X (GUI forwarding)"
+    status: dead
+    note: "TCP/22 refused 2026-07-27"
+
+  old-host-7:
+    host: "***REMOVED***"
+    provider: unknown
+    status: dead
+    note: "TCP/22 refused 2026-07-27"
+
+  old-host-8:
+    host: "***REMOVED***"
+    provider: unknown
+    status: dead
+    note: "TCP/22 refused 2026-07-27"
+
+  old-host-9:
+    host: "***REMOVED***"
+    user: "***REMOVED***"
+    provider: unknown
+    status: dead
+    note: "TCP/22 refused 2026-07-27. NOTE: password was leaked into shell history - rotate if this box returns."
+
+  iphone171:
+    host: "***REMOVED***"
+    provider: tailscale
+    status: dead
+    note: "iOS device, no sshd - listed for completeness only"
